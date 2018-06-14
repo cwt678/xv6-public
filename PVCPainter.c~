@@ -1,0 +1,34 @@
+#include "types.h"
+#include "user.h"
+#include "PVCPainter.h"
+
+PHdc pvcGetDC(PHwnd hwnd)
+{
+	return &(hwnd->dc);
+}
+
+PHdc pvcCreateCompatibleDC(PHdc hdc);
+
+void pvcDeleteDC(PHdc hdc);
+
+PPen pvcSetPen(PHdc hdc, PPen pen);
+
+PBrush pvcSetBrush(PHdc hdc, PBrush brush);
+
+void pvcSetPixel(PHdc hdc, int x, int y, PColor color);
+
+PColor pvcPixel(PHdc hdc, int x, int y);
+
+void pvcDrawPoint(PHdc hdc, int x, int y);
+
+void pvcDrawLine(PHdc hdc, int x1, int y1, int x2, int y2);
+
+void pvcDrawRect(PHdc hdc, int x, int y, int w, int h);
+
+//void pvcFillRect(PHdc hdc, int x, int y, int w, int h);
+
+//void pvcFrameRect(PHdc hdc, int x, int y, int w, int h);
+
+void pvcEllipse(PHdc hdc, int x, int y, int w, int h);
+
+void pvcFloodFill(PHdc hdc, int x, int y, PColor color, PFlag type);

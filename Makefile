@@ -1,4 +1,5 @@
 OBJS = \
+	sound.o\
 	bio.o\
 	console.o\
 	exec.o\
@@ -19,6 +20,7 @@ OBJS = \
 	spinlock.o\
 	string.o\
 	swtch.o\
+	sysaudio.o\
 	syscall.o\
 	sysfile.o\
 	sysproc.o\
@@ -82,7 +84,7 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
 
 xv6.img: bootblock kernel fs.img
-	dd if=/dev/zero of=xv6.img count=10000
+	dd if=/dev/zero of=xv6.img count=120000
 	dd if=bootblock of=xv6.img conv=notrunc
 	dd if=kernel of=xv6.img seek=1 conv=notrunc
 
@@ -134,7 +136,7 @@ tags: $(OBJS) entryother.S _init
 vectors.S: vectors.pl
 	perl vectors.pl > vectors.S
 
-ULIB = ulib.o usys.o printf.o umalloc.o PVCPainter.o PVCWindow.o PVCLib.o PVCControl.o PVCDialog.o PVCDecodeJPEG.o
+ULIB = ulib.o usys.o printf.o umalloc.o PVCPainter.o PVCWindow.o PVCLib.o PVCControl.o PVCDialog.o PVCDecodeJPEG.o math.o common.o huffman.o decodemp3.o
 
 _%: %.o $(ULIB)
 	$(LD) $(LDFLAGS) -N -e main -Ttext 0 -o $@ $^
@@ -180,6 +182,12 @@ UPROGS=\
 	_PVCFileManager\
   	_PVCClock\
 	_PVCRushHour\
+	_PVCMP3\
+	_pause\
+	_wavBufPlay\
+	_playWav\
+	_mp3decodePlay\
+	_playmp3\
 
 PVCFILES =\
 	ASCII\
@@ -206,11 +214,17 @@ PVCFILES =\
 	RHHero.bmp\
 	test.jpg\
 	desktop.bmp\
+	MP3.bmp\
+	RHGameStatus.bmp\
+	desktop.bmp\
+	last.bmp\
+	next.bmp\
+  
 	#GBK2312\
 	#pointer.bmp\
 
 fs.img: mkfs README $(PVCFILES) $(UPROGS)
-	./mkfs fs.img README $(PVCFILES) $(UPROGS)
+	./mkfs fs.img README $(PVCFILES) $(UPROGS) qian.wav test.wav in.mp3
 
 -include *.d
 
@@ -246,7 +260,8 @@ QEMUGDB = $(shell if $(QEMU) -help | grep -q '^-gdb'; \
 ifndef CPUS
 CPUS := 2
 endif
-QEMUOPTS = -hdb fs.img xv6.img -smp $(CPUS) -m 512 $(QEMUEXTRA) -vga std
+
+QEMUOPTS = -soundhw ac97 -hdb fs.img xv6.img -smp $(CPUS) -m 512 $(QEMUEXTRA) -vga std
 
 qemu: fs.img xv6.img
 	$(QEMU) -serial mon:stdio $(QEMUOPTS)
