@@ -84,7 +84,7 @@ ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 LDFLAGS += -m $(shell $(LD) -V | grep elf_i386 2>/dev/null)
 
 xv6.img: bootblock kernel fs.img
-	dd if=/dev/zero of=xv6.img count=120000
+	dd if=/dev/zero of=xv6.img count=10000
 	dd if=bootblock of=xv6.img conv=notrunc
 	dd if=kernel of=xv6.img seek=1 conv=notrunc
 
@@ -175,56 +175,20 @@ UPROGS=\
 	_wc\
 	_zombie\
 	_PVCDesktop\
-	_PVCSnake\
 	_PVCPhotoViewer\
-	_PVCNotePad\
-	_PVCPaintBoard\
-	_PVCFileManager\
-  	_PVCClock\
-	_PVCRushHour\
-	_PVCMP3\
-	_pause\
-	_wavBufPlay\
-	_playWav\
-	_mp3decodePlay\
-	_playmp3\
+
 
 PVCFILES =\
 	ASCII\
-	FX_CLOCK_TYPE5.bmp\
-	FX_CLOCK_TYPE4.bmp\
-	FX_CLOCK_TYPE3.bmp\
-	FX_CLOCK_TYPE2.bmp\
 	Snake.bmp\
-	PaintBoard.bmp\
-	Clock.bmp\
-	NotePad.bmp\
-	FileManager.bmp\
-	RushHour.bmp\
-	RHBlueBlock.bmp\
-	RHGreenBlock.bmp\
 	PhotoViewer.bmp\
-	RHOrangeBlock.bmp\
-	RHPinkBlock.bmp\
-	RHBlackRoof.bmp\
-	RHGreyRoof.bmp\
-	RHBackground.bmp\
-	RHBuilding.bmp\
-	RHGameStatus.bmp\
-	RHHero.bmp\
 	test.jpg\
 	desktop.bmp\
-	MP3.bmp\
-	RHGameStatus.bmp\
-	desktop.bmp\
-	last.bmp\
-	next.bmp\
-  
 	#GBK2312\
 	#pointer.bmp\
 
 fs.img: mkfs README $(PVCFILES) $(UPROGS)
-	./mkfs fs.img README $(PVCFILES) $(UPROGS) qian.wav test.wav in.mp3
+	./mkfs fs.img README $(PVCFILES) $(UPROGS) 
 
 -include *.d
 
